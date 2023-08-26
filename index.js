@@ -1,39 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 8080;
-
-const productsList = [
-  {
-    'product id': 1,
-    name: 'Chaqueta de cuero',
-    price: 70,
-    category: 'clothes',
-  },
-  {
-    'product id': 2,
-    name: 'Pantalones azules',
-    price: 30,
-    category: 'clothes',
-  },
-  {
-    'product id': 3,
-    name: 'Telefono Nokia antiguo',
-    price: 20,
-    category: 'electronics',
-  },
-  {
-    'product id': 4,
-    name: 'Chocolatina Jet Grande',
-    price: 99999,
-    category: 'others',
-  },
-  {
-    'product id': 5,
-    name: 'Funko de Spider-Man',
-    price: 48,
-    category: 'others',
-  },
-];
+const { faker } = require('@faker-js/faker');
 
 const usersList = [
   { id: 1, name: 'Juan', role: 'Admin' },
@@ -57,7 +25,22 @@ app.get('/nueva-ruta', (req, res) => {
 });
 
 app.get('/products', (req, res) => {
+  let productsList = [];
+  const { size } = req.query;
+  const limit = size || 10;
+  // Este bucle genera productos dependiendo del valor de limit.
+  for (let i = 0; i < limit; i++) {
+    productsList.push({
+      name: faker.commerce.productName(),
+      price: faker.commerce.price(),
+      image: faker.image.url(),
+    });
+  }
   res.json(productsList);
+});
+// Este endpoint es solo de prueba, para mostrar como evitar un colapso de endpoints.
+app.get('/products/filter', (req, res) => {
+  res.send('Si me puedes leer, hemos evitado un colapso de endpoints');
 });
 
 app.get('/products/:id', (req, res) => {
