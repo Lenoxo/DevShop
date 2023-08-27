@@ -2,6 +2,7 @@ const express = require('express');
 const { faker } = require('@faker-js/faker');
 const router = express.Router();
 
+// Manejo con get.
 router.get('/', (req, res) => {
   let productsList = [];
   const { size } = req.query;
@@ -28,6 +29,15 @@ router.get('/:id', (req, res) => {
     name: 'Producto de prueba',
     price: 68,
     category: 'others',
+  });
+});
+
+// Manejo con Post
+router.post('/', (req, res) => {
+  const body = req.body;
+  res.json({
+    state: 'created',
+    data: body,
   });
 });
 

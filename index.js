@@ -3,6 +3,8 @@ const routerApi = require('./routes');
 const app = express();
 const port = 8080;
 
+app.use(express.json());
+
 app.get('/', (req, res) => {
   res.send('Hola que tal, ya funciona!');
 });
