@@ -41,4 +41,24 @@ router.post('/', (req, res) => {
   });
 });
 
+// Manejo con patch (Actualización parcial)
+router.patch('/:id', (req, res) => {
+  const { id } = req.params;
+  const body = req.body;
+  res.json({
+    productId: id,
+    state: 'updated',
+    data: body,
+  });
+});
+
+// Manejo con delete
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  res.json({
+    productId: id,
+    state: 'deleted',
+  });
+});
+
 module.exports = router;
