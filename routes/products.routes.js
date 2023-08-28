@@ -15,27 +15,36 @@ router.get('/', (req, res) => {
       image: faker.image.url(),
     });
   }
-  res.json(productsList);
+  res.status(200).json(productsList);
 });
 // Este endpoint es solo de prueba, para mostrar como evitar un colapso de endpoints.
 router.get('/filter', (req, res) => {
-  res.send('Si me puedes leer, hemos evitado un colapso de endpoints');
+  res
+    .status(200)
+    .send('Si me puedes leer, hemos evitado un colapso de endpoints');
 });
 
 router.get('/:id', (req, res) => {
   const { id } = req.params;
-  res.json({
-    'product id': id,
-    name: 'Producto de prueba',
-    price: 68,
-    category: 'others',
-  });
+  // Aquí dejo un '888' porque por defecto, el id viene como un string.
+  if (id === '888') {
+    res.status(404).json({
+      message: 'Product Not Found',
+    });
+  } else {
+    res.status(200).json({
+      'product id': id,
+      name: 'Producto de prueba',
+      price: 68,
+      category: 'others',
+    });
+  }
 });
 
 // Manejo con Post
 router.post('/', (req, res) => {
   const body = req.body;
-  res.json({
+  res.status(201).json({
     state: 'created',
     data: body,
   });
@@ -45,7 +54,7 @@ router.post('/', (req, res) => {
 router.patch('/:id', (req, res) => {
   const { id } = req.params;
   const body = req.body;
-  res.json({
+  res.status(200).json({
     productId: id,
     state: 'updated',
     data: body,
@@ -55,7 +64,7 @@ router.patch('/:id', (req, res) => {
 // Manejo con delete
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
-  res.json({
+  res.status(200).json({
     productId: id,
     state: 'deleted',
   });
