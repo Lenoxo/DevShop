@@ -35,9 +35,10 @@ router.get('/:id', (req, res) => {
 // Manejo con Post
 router.post('/', (req, res) => {
   const body = req.body;
+  const newProduct = service.generateOne(body);
   res.status(201).json({
     state: 'created',
-    data: body,
+    data: newProduct,
   });
 });
 
@@ -45,20 +46,15 @@ router.post('/', (req, res) => {
 router.patch('/:id', (req, res) => {
   const { id } = req.params;
   const body = req.body;
-  res.status(200).json({
-    productId: id,
-    state: 'updated',
-    data: body,
-  });
+  const result = service.update(id, body);
+  res.status(200).json(result);
 });
 
 // Manejo con delete
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
-  res.status(200).json({
-    productId: id,
-    state: 'deleted',
-  });
+  const result = service.delete(id);
+  res.status(200).json(result);
 });
 
 module.exports = router;

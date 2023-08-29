@@ -19,19 +19,54 @@ class ProductsService {
       });
     }
   }
+
+  generateOne(data) {
+    const newProduct = {
+      id: faker.string.uuid(),
+      ...data,
+    };
+    this.products.push(newProduct);
+    return newProduct;
+  }
   // Consulta de productos
   find() {
     return this.products;
   }
 
-  findOne(productId) {
-    // return this.products[productId]
-    return this.products.find((product) => product.id === productId);
+  findOne(id) {
+    return this.products.find((product) => product.id === id);
   }
   // Edición de productos
-  update() {}
+  update(id, updatedData) {
+    // Actualiza esto poniendo la validación del -1
+    let index = this.products.findIndex((product) => product.id === id);
+    if (index === -1) {
+      throw new Error('Product Not Found');
+    } else {
+      const productData = this.products[index];
+      this.products[index] = {
+        ...productData,
+        ...updatedData,
+      };
+      return {
+        state: 'updated',
+        data: this.products[index],
+      };
+    }
+  }
   // Eliminación de productos
-  delete() {}
+  delete(id) {
+    const index = this.products.findIndex((product) => product.id === id);
+    if (index === -1) {
+      throw new Error('Product Not Found');
+    } else {
+      this.products.splice(index, 1);
+      return {
+        state: 'deleted',
+        id,
+      };
+    }
+  }
 }
 
 module.exports = ProductsService;
