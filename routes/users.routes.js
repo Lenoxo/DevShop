@@ -1,21 +1,28 @@
 const express = require('express');
-// const { faker } = require('@faker-js/faker');
+const usersService = require('../services/users.service');
+const service = new usersService();
 const router = express.Router();
 
-const usersList = [
-  { id: 1, name: 'Juan', role: 'Admin' },
-  { id: 2, name: 'Lucia', role: 'Manager' },
-  { id: 3, name: 'Esteban', role: 'Crew' },
-  { id: 4, name: 'Emanuel', role: 'Client' },
-];
-
 router.get('/', (req, res) => {
-  res.json(usersList);
+  const usersList = service.users;
+  res.status(200).json(usersList);
 });
 
-router.get('/:id', (req, res) => {
+router.post('/', (req, res) => {
+  const body = req.body;
+  const result = service.createOne(body);
+  res.status(201).json(result);
+});
+router.patch('/:id', (req, res) => {
   const { id } = req.params;
-  res.json(usersList[id - 1]);
+  const body = req.body;
+  const result = service.edit(id, body);
+  res.status(200).json(result);
+});
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  const result = service.delete(id);
+  res.status(200).json(result);
 });
 
 module.exports = router;
