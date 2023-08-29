@@ -1,21 +1,11 @@
 const express = require('express');
-const { faker } = require('@faker-js/faker');
 const router = express.Router();
-
+const ProductsService = require('../services/products.service');
+const service = new ProductsService();
 // Manejo con get.
 router.get('/', (req, res) => {
-  let productsList = [];
-  const { size } = req.query;
-  const limit = size || 10;
-  // Este bucle genera productos dependiendo del valor de limit.
-  for (let i = 0; i < limit; i++) {
-    productsList.push({
-      name: faker.commerce.productName(),
-      price: faker.commerce.price(),
-      image: faker.image.url(),
-    });
-  }
-  res.status(200).json(productsList);
+  const products = service.find();
+  res.status(200).json(products);
 });
 // Este endpoint es solo de prueba, para mostrar como evitar un colapso de endpoints.
 router.get('/filter', (req, res) => {
@@ -26,19 +16,20 @@ router.get('/filter', (req, res) => {
 
 router.get('/:id', (req, res) => {
   const { id } = req.params;
+  res.json(service.findOne(id));
   // Aquí dejo un '888' porque por defecto, el id viene como un string.
-  if (id === '888') {
-    res.status(404).json({
-      message: 'Product Not Found',
-    });
-  } else {
-    res.status(200).json({
-      'product id': id,
-      name: 'Producto de prueba',
-      price: 68,
-      category: 'others',
-    });
-  }
+  // if (id === '888') {
+  //   res.status(404).json({
+  //     message: 'Product Not Found',
+  //   });
+  // } else {
+  //   res.status(200).json({
+  //     'product id': id,
+  //     name: 'Producto de prueba',
+  //     price: 68,
+  //     category: 'others',
+  //   });
+  // }
 });
 
 // Manejo con Post
