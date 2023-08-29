@@ -20,7 +20,7 @@ class ProductsService {
     }
   }
 
-  generateOne(data) {
+  async generateOne(data) {
     const newProduct = {
       id: faker.string.uuid(),
       ...data,
@@ -29,11 +29,16 @@ class ProductsService {
     return newProduct;
   }
   // Consulta de productos
-  find() {
-    return this.products;
+  async find() {
+    // En este caso, emulo asincronismo usando el setTimeout.
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(this.products);
+      }, 2000);
+    });
   }
 
-  findOne(id) {
+  async findOne(id) {
     const product = this.products.find((product) => product.id === id);
     if (product === undefined) {
       throw new Error('Product Not Found');
@@ -42,7 +47,7 @@ class ProductsService {
     }
   }
   // Edición de productos
-  update(id, updatedData) {
+  async update(id, updatedData) {
     // Actualiza esto poniendo la validación del -1
     let index = this.products.findIndex((product) => product.id === id);
     if (index === -1) {
@@ -61,7 +66,7 @@ class ProductsService {
     }
   }
   // Eliminación de productos
-  delete(id) {
+  async delete(id) {
     const index = this.products.findIndex((product) => product.id === id);
     if (index === -1) {
       throw new Error('Product Not Found');
