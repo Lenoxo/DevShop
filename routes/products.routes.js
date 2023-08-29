@@ -14,22 +14,20 @@ router.get('/filter', async (req, res) => {
     .send('Si me puedes leer, hemos evitado un colapso de endpoints');
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   const { id } = req.params;
   try {
     const result = await service.findOne(id);
     res.status(200).json(result);
   } catch (error) {
-    res.status(404).json({
-      message: error.message,
-    });
+    next(error);
   }
 });
 
 // Manejo con Post
 router.post('/', async (req, res) => {
   const body = req.body;
-  const newProduct = service.generateOne(body);
+  const newProduct = await service.generateOne(body);
   res.status(201).json({
     state: 'created',
     data: newProduct,
@@ -37,18 +35,26 @@ router.post('/', async (req, res) => {
 });
 
 // Manejo con patch (Actualización parcial)
-router.patch('/:id', async (req, res) => {
-  const { id } = req.params;
-  const body = req.body;
-  const result = service.update(id, body);
-  res.status(200).json(result);
+router.patch('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    const result = await service.update(id, body);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // Manejo con delete
-router.delete('/:id', async (req, res) => {
-  const { id } = req.params;
-  const result = service.delete(id);
-  res.status(200).json(result);
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await service.delete(id);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;
