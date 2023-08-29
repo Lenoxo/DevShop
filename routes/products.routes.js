@@ -18,7 +18,7 @@ router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const result = await service.findOne(id);
-    res.json(result);
+    res.status(200).json(result);
   } catch (error) {
     res.status(404).json({
       message: error.message,
