@@ -34,7 +34,12 @@ class ProductsService {
   }
 
   findOne(id) {
-    return this.products.find((product) => product.id === id);
+    const product = this.products.find((product) => product.id === id);
+    if (product === undefined) {
+      throw new Error('Product Not Found');
+    } else {
+      return product;
+    }
   }
   // Edición de productos
   update(id, updatedData) {
@@ -45,6 +50,7 @@ class ProductsService {
     } else {
       const productData = this.products[index];
       this.products[index] = {
+        // El spread operator aquí permite actualizar datos.
         ...productData,
         ...updatedData,
       };

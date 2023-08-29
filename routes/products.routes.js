@@ -17,19 +17,6 @@ router.get('/filter', (req, res) => {
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   res.json(service.findOne(id));
-  // Aquí dejo un '888' porque por defecto, el id viene como un string.
-  // if (id === '888') {
-  //   res.status(404).json({
-  //     message: 'Product Not Found',
-  //   });
-  // } else {
-  //   res.status(200).json({
-  //     'product id': id,
-  //     name: 'Producto de prueba',
-  //     price: 68,
-  //     category: 'others',
-  //   });
-  // }
 });
 
 // Manejo con Post

@@ -16,7 +16,7 @@ router.post('/', (req, res) => {
 router.patch('/:id', (req, res) => {
   const { id } = req.params;
   const body = req.body;
-  const result = service.edit(id, body);
+  const result = service.update(id, body);
   res.status(200).json(result);
 });
 router.delete('/:id', (req, res) => {

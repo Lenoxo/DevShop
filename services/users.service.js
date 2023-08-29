@@ -26,7 +26,7 @@ class usersService {
     this.users.push(newUser);
     return newUser;
   }
-  edit(id, editedData) {
+  update(id, editedData) {
     const index = this.users.findIndex((user) => user.id === id);
     if (index === -1) {
       throw new Error('User Not Found');
