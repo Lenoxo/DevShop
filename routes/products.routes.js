@@ -53,6 +53,7 @@ router.post(
 // Manejo con patch (Actualización parcial)
 router.patch(
   '/:id',
+  // En este caso, se pueden encadenar varios middlewares así.
   validatorHandler(getProductSchema, 'params'),
   validatorHandler(updateProductSchema, 'body'),
   async (req, res, next) => {
@@ -68,14 +69,18 @@ router.patch(
 );
 
 // Manejo con delete
-router.delete('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const result = await service.delete(id);
-    res.status(200).json(result);
-  } catch (error) {
-    next(error);
-  }
-});
+router.delete(
+  '/:id',
+  validatorHandler(deleteProductSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const result = await service.delete(id);
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 module.exports = router;
