@@ -7,7 +7,7 @@ const {
 } = require('./middlewares/error.handler');
 const cors = require('cors');
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 // Este middleware permite manejar peticiones con formato JSON.
 app.use(express.json());
@@ -27,7 +27,7 @@ app.use(cors());
 // }
 // app.use(cors(options))
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.send('Hola que tal, ya funciona!');
 });
 
