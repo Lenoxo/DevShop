@@ -61,7 +61,7 @@ class ProductsService {
         ...updatedData,
       };
       return {
-        state: 'updated',
+        message: 'updated',
         data: this.products[index],
       };
     }
@@ -74,7 +74,7 @@ class ProductsService {
     } else {
       this.products.splice(index, 1);
       return {
-        state: 'deleted',
+        message: 'deleted',
         id,
       };
     }

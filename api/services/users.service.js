@@ -37,7 +37,7 @@ class usersService {
         ...editedData,
       };
       return {
-        status: 'edited',
+        message: 'edited',
         userData: this.users[index],
       };
     }
@@ -50,7 +50,7 @@ class usersService {
       this.users.splice(index, 1);
       return {
         id,
-        status: 'deleted',
+        message: 'deleted',
       };
     }
   }

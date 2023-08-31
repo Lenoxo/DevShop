@@ -44,7 +44,7 @@ router.post(
     const body = req.body;
     const newProduct = await service.generateOne(body);
     res.status(201).json({
-      state: 'created',
+      message: 'created',
       data: newProduct,
     });
   },
