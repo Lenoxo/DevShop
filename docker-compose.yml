@@ -1,14 +1,21 @@
-version: "3.3" # Versión de compose
+version: '3.3'
 
 services:
   postgres: # Por convención se nombra con el mismo nombre que la imagen que usas.
     image: postgres:13 # Imagen con versión
     environment: # Variables de entorno
       POSTGRES_DB: "my-ecommerce-db"
-      POSTGRES_USER: "emanuel"
-      POSTGRES_PASSWORD: "probando y administrando, bases vamos creando."
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "root"
     ports:
       - 5432:5432 # Este puerto lo usa por defecto postgresql
     volumes: # Los volumes permiten persistir info de los contenedores.
       - ./postgres_data:/var/lib/postgresql/data
-      # Por defecto, las imágenes no guardan estados, pero los volumes si.
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@mail.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - 5050:80
