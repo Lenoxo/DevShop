@@ -4,7 +4,7 @@ const service = new usersService();
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const usersList = await service.users;
+  const usersList = await service.find();
   res.status(200).json(usersList);
 });
 
