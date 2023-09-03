@@ -7,7 +7,7 @@ class ProductsService {
     this.products = [];
     this.generate();
     this.pool = pool;
-    pool.on('error', (err) => {
+    this.pool.on('error', (err) => {
       console.error('An error occured with the database pool', err);
       process.exit(-1);
     });
