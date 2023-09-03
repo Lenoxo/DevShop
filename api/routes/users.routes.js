@@ -8,6 +8,12 @@ router.get('/', async (req, res) => {
   res.status(200).json(usersList);
 });
 
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  const user = await service.findOne(id);
+  res.status(200).json(user);
+});
+
 router.post('/', async (req, res) => {
   const body = req.body;
   const result = await service.createOne(body);
