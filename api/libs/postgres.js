@@ -1,5 +1,4 @@
 const { Client } = require('pg');
-connectClient();
 
 async function connectClient() {
   const client = new Client({
