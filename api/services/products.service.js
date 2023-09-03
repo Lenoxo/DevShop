@@ -5,7 +5,7 @@ const pool = require('../libs/postgres.pool');
 class ProductsService {
   constructor() {
     this.products = [];
-    this.generate();
+    // this.generate();
     this.pool = pool;
     this.pool.on('error', (err) => {
       console.error('An error occured with the database pool', err);
