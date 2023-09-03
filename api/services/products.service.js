@@ -1,10 +1,16 @@
 const { faker } = require('@faker-js/faker');
 const boom = require('@hapi/boom');
+const pool = require('../libs/postgres.pool');
 
 class ProductsService {
   constructor() {
     this.products = [];
     this.generate();
+    this.pool = pool;
+    pool.on('error', (err) => {
+      console.error('An error occured with the database pool', err);
+      process.exit(-1);
+    });
   }
 
   // Generación de productos
@@ -31,12 +37,9 @@ class ProductsService {
   }
   // Consulta de productos
   async find() {
-    // En este caso, emulo asincronismo usando el setTimeout.
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(this.products);
-      }, 2000);
-    });
+    const query = 'SELECT * FROM tasks';
+    const response = await this.pool.query(query);
+    return response.rows;
   }
 
   async findOne(id) {
