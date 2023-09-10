@@ -13,9 +13,9 @@ const createProductSchema = Joi.object({
   image: image.required(),
 });
 const updateProductSchema = Joi.object({
-  name: name.required(),
-  price: price.required(),
-  image: image.required(),
+  name: name,
+  price: price,
+  image: image,
 });
 const deleteProductSchema = Joi.object({
   id: id.required(),
