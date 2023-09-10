@@ -19,7 +19,7 @@ const updateUserSchema = Joi.object({
   name: name,
   email: email,
   password: password,
-  // image: image.required(),
+  // image: image,
 });
 const deleteUserSchema = Joi.object({
   id: id.required(),
