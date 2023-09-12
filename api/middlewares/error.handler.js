@@ -1,13 +1,7 @@
 function logErrors(error, req, res, next) {
-  console.error(error);
+  const { name, parent, fields } = error;
+  console.error(name);
   next(error);
-}
-
-function errorHandler(error, req, res, next) {
-  res.status(500).json({
-    message: error.message,
-    stack: error.stack,
-  });
 }
 
 function boomErrorHandler(error, req, res, next) {
@@ -19,4 +13,25 @@ function boomErrorHandler(error, req, res, next) {
   }
 }
 
-module.exports = { errorHandler, logErrors, boomErrorHandler };
+function errorHandler(error, req, res, next) {
+  res.status(500).json({
+    message: error.message,
+    stack: error.stack,
+  });
+}
+
+function sequelizeErrorHandler(error, req, res, next) {
+  const { name, parent, fields } = error;
+  if (false) {
+    // console.log(name), console.log(parent), console.log(fields);
+  } else {
+    next(error);
+  }
+}
+
+module.exports = {
+  errorHandler,
+  logErrors,
+  boomErrorHandler,
+  sequelizeErrorHandler,
+};

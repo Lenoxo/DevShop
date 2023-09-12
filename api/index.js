@@ -5,6 +5,7 @@ const {
   logErrors,
   errorHandler,
   boomErrorHandler,
+  sequelizeErrorHandler,
 } = require('./middlewares/error.handler');
 const cors = require('cors');
 const app = express();
@@ -27,6 +28,7 @@ routerApi(app);
 // El orden en el que los llamas importa.
 app.use(logErrors);
 app.use(boomErrorHandler);
+app.use(sequelizeErrorHandler);
 app.use(errorHandler);
 
 app.listen(port, () => {
