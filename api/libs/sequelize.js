@@ -4,10 +4,10 @@ const initModels = require('../db/models');
 
 const USER = encodeURIComponent(config.dbUser);
 const PASSWORD = encodeURIComponent(config.dbPassword);
-const URI = `mysql://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/${config.dbName}`;
+const URI = `postgres://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/${config.dbName}`;
 
 const sequelize = new Sequelize(URI, {
-  dialect: 'mysql',
+  dialect: 'postgres',
   // Esta es una nueva sintaxis que se maneja en la versión más reciente de sequelize.
   logging: (query) => {
     // Se recibe el query en vez de poner true.
@@ -19,6 +19,7 @@ const sequelize = new Sequelize(URI, {
 
 initModels(sequelize);
 
-sequelize.sync();
+// El uso de sequelize.sync no es viable para producción, es mejor usar migraciones.
+// sequelize.sync();
 
 module.exports = sequelize;
