@@ -1,6 +1,7 @@
+const { ValidationError } = require('sequelize');
+
 function logErrors(error, req, res, next) {
-  const { name, parent, fields } = error;
-  console.error(name);
+  console.error(error);
   next(error);
 }
 
@@ -13,20 +14,30 @@ function boomErrorHandler(error, req, res, next) {
   }
 }
 
+function sequelizeErrorHandler(error, req, res, next) {
+  if (error instanceof ValidationError) {
+    // const { fields, parent } = error;
+    // res.status(409).json({
+    //   message: 'Conflict with sent data',
+    //   fields,
+    //   details: parent.detail,
+    // });
+    const statusCode = 409;
+    res.status(statusCode).json({
+      statusCode,
+      message: error.message,
+      details: error.errors,
+    });
+  } else {
+    next(error);
+  }
+}
+
 function errorHandler(error, req, res, next) {
   res.status(500).json({
     message: error.message,
     stack: error.stack,
   });
-}
-
-function sequelizeErrorHandler(error, req, res, next) {
-  const { name, parent, fields } = error;
-  if (false) {
-    // console.log(name), console.log(parent), console.log(fields);
-  } else {
-    next(error);
-  }
 }
 
 module.exports = {

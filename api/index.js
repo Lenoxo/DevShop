@@ -27,8 +27,8 @@ routerApi(app);
 // Siempre se usa después del llamado de routerApi los middleware.
 // El orden en el que los llamas importa.
 app.use(logErrors);
-app.use(boomErrorHandler);
 app.use(sequelizeErrorHandler);
+app.use(boomErrorHandler);
 app.use(errorHandler);
 
 app.listen(port, () => {
