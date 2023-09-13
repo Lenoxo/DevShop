@@ -5,21 +5,20 @@ const id = Joi.number().min(1);
 const name = Joi.string().min(3).max(40);
 const email = Joi.string().email();
 const password = Joi.string().min(3).max(40);
-const image = Joi.string().uri();
+const role = Joi.string().min(5);
 
 // Justo aquí es de donde hablo de .required
 const createUserSchema = Joi.object({
   name: name.required(),
   email: email.required(),
   password: password.required(),
-  // image: image.required(),
+  role: role,
 });
 const updateUserSchema = Joi.object({
-  id: id,
   name: name,
   email: email,
   password: password,
-  // image: image,
+  role: role,
 });
 const deleteUserSchema = Joi.object({
   id: id.required(),
