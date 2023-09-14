@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 // Estas validaciones están por fuera, para permitir usar .required de forma dinámica más adelante.
-const id = Joi.string().uuid();
+const id = Joi.number().min(1);
 const name = Joi.string().min(3).max(40);
 const price = Joi.number().min(5);
 const image = Joi.string().uri();
