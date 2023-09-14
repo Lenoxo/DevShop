@@ -1,4 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
+const { USER_TABLE } = require('./user.model');
 
 const CUSTOMER_TABLE = 'customers';
 
@@ -9,19 +10,46 @@ const customerSchema = {
     autoIncrement: true,
     type: DataTypes.INTEGER,
   },
+
+  name: {
+    allowNull: false,
+    type: DataTypes.STRING,
+  },
+
+  lastName: {
+    allowNull: false,
+    type: DataTypes.STRING,
+    field: 'last_name',
+  },
+
+  phone: {
+    allowNull: false,
+    type: DataTypes.STRING,
+  },
+
+  createdAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: 'created_at',
+    defaultValue: DataTypes.NOW,
+  },
+
   userId: {
     allowNull: false,
     type: DataTypes.INTEGER,
+    field: 'user_id',
     references: {
-      model: 'User',
+      model: USER_TABLE,
       key: 'id', // Esta debe ser siempre la llave primaria del model.
     },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
   },
 };
 
 class Customer extends Model {
-  static associate() {
-    // Logica más adelante...
+  static associate(models) {
+    this.belongsTo(models.User, { as: 'user' });
   }
   // sequelize aquí hace referencia a la conexión que se recibe.
   static config(sequelize) {

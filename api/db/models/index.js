@@ -11,6 +11,9 @@ function initModels(sequelize) {
   Category.init(categorySchema, Category.config(sequelize));
   Order.init(orderSchema, Order.config(sequelize));
   Customer.init(customerSchema, Customer.config(sequelize));
+
+  // Las relaciones siempre se declaran después de las inicializaciones.
+  Customer.associate(sequelize.models);
 }
 
 module.exports = initModels;

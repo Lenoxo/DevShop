@@ -25,7 +25,7 @@ class customersService {
   }
   async update(id, editedData) {
     const customer = await this.findOne(id);
-    const response = await customer.update(data);
+    const response = await customer.update(editedData);
     return response;
   }
   async delete(id) {
