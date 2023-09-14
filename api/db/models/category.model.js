@@ -11,6 +11,7 @@ const categorySchema = {
   },
   name: {
     allowNull: false,
+    unique: true,
     type: DataTypes.STRING,
   },
   image: {
@@ -26,8 +27,8 @@ const categorySchema = {
 };
 
 class Category extends Model {
-  static associate() {
-    // Logica más adelante...
+  static associate(models) {
+    this.hasMany(models.Product, { as: 'products', foreignKey: 'categoryId' });
   }
   // sequelize aquí hace referencia a la conexión que se recibe.
   static config(sequelize) {

@@ -1,5 +1,7 @@
 const { Model, DataTypes } = require('sequelize');
 
+const { CATEGORY_TABLE } = require('./category.model');
+
 const PRODUCT_TABLE = 'products';
 
 const productSchema = {
@@ -15,15 +17,26 @@ const productSchema = {
   },
   description: {
     allowNull: false,
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
   },
   price: {
     allowNull: false,
-    type: DataTypes.DECIMAL(2),
+    type: DataTypes.INTEGER,
   },
   image: {
     allowNull: false,
     type: DataTypes.STRING,
+  },
+  categoryId: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    field: 'category_id',
+    references: {
+      model: CATEGORY_TABLE,
+      key: 'id', // Esta debe ser siempre la llave primaria del model.
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
   },
   createdAt: {
     allowNull: false,
@@ -34,8 +47,8 @@ const productSchema = {
 };
 
 class Product extends Model {
-  static associate() {
-    // Logica más adelante...
+  static associate(models) {
+    this.belongsTo(models.Category, { as: 'category' });
   }
   // sequelize aquí hace referencia a la conexión que se recibe.
   static config(sequelize) {

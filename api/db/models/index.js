@@ -15,6 +15,7 @@ function initModels(sequelize) {
   // Las relaciones siempre se declaran después de las inicializaciones.
   Customer.associate(sequelize.models);
   User.associate(sequelize.models);
+  Product.associate(sequelize.models);
 }
 
 module.exports = initModels;
