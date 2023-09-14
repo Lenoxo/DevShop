@@ -7,11 +7,15 @@ class customersService {
   }
 
   async find() {
-    const response = await models.Customer.findAll();
+    const response = await models.Customer.findAll({
+      include: ['user'],
+    });
     return response;
   }
   async findOne(id) {
-    const customer = await models.Customer.findByPk(id);
+    const customer = await models.Customer.findByPk(id, {
+      include: ['user'],
+    });
 
     if (!customer) {
       throw boom.notFound('Customer Not Found');
@@ -20,7 +24,9 @@ class customersService {
     }
   }
   async create(customerData) {
-    const newCustomer = await models.Customer.create(customerData);
+    const newCustomer = await models.Customer.create(customerData, {
+      include: ['user'],
+    });
     return newCustomer;
   }
   async update(id, editedData) {

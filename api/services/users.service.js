@@ -6,12 +6,12 @@ class usersService {
   constructor() {}
 
   async find() {
-    const response = await models.User.findAll();
+    const response = await models.User.findAll({ include: ['customer'] });
     return response;
   }
 
   async findOne(id) {
-    const user = await models.User.findByPk(id);
+    const user = await models.User.findByPk(id, { include: ['customer'] });
     if (!user) {
       throw boom.notFound('User Not Found');
     } else {
@@ -20,8 +20,8 @@ class usersService {
   }
 
   async createOne(data) {
-    const response = await models.User.create(data);
-    return response;
+    const newUser = await models.User.create(data, { include: ['customer'] });
+    return newUser;
   }
   async update(id, editedData) {
     const user = await this.findOne(id);
