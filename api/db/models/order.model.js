@@ -1,5 +1,7 @@
 const { Model, DataTypes } = require('sequelize');
 
+const { CUSTOMER_TABLE } = require('./customer.model');
+
 const ORDER_TABLE = 'orders';
 
 const orderSchema = {
@@ -9,11 +11,24 @@ const orderSchema = {
     autoIncrement: true,
     type: DataTypes.INTEGER,
   },
-  totalProducts: {
+  // totalProducts: {
+  //   allowNull: false,
+  //   field: 'total_products',
+  //   type: DataTypes.INTEGER,
+  // },
+
+  customerId: {
     allowNull: false,
-    field: 'total_products',
     type: DataTypes.INTEGER,
+    field: 'customer_id',
+    references: {
+      model: CUSTOMER_TABLE,
+      key: 'id', // Esta debe ser siempre la llave primaria del model.
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL',
   },
+
   date: {
     allowNull: false,
     type: DataTypes.DATE,
@@ -23,8 +38,8 @@ const orderSchema = {
 };
 
 class Order extends Model {
-  static associate() {
-    // Logica más adelante...
+  static associate(models) {
+    this.belongsTo(models.Customer, { as: 'customer' });
   }
   // sequelize aquí hace referencia a la conexión que se recibe.
   static config(sequelize) {

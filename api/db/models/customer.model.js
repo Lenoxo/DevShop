@@ -51,6 +51,7 @@ const customerSchema = {
 class Customer extends Model {
   static associate(models) {
     this.belongsTo(models.User, { as: 'user' });
+    this.hasMany(models.Order, { as: 'orders', foreignKey: 'customerId' });
   }
   // sequelize aquí hace referencia a la conexión que se recibe.
   static config(sequelize) {
