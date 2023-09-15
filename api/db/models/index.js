@@ -16,6 +16,7 @@ function initModels(sequelize) {
   Customer.associate(sequelize.models);
   User.associate(sequelize.models);
   Product.associate(sequelize.models);
+  Category.associate(sequelize.models);
 }
 
 module.exports = initModels;

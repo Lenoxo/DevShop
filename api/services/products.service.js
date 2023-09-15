@@ -1,11 +1,9 @@
 const { faker } = require('@faker-js/faker');
 const boom = require('@hapi/boom');
-const sequelize = require('../libs/sequelize');
+const { models } = require('../libs/sequelize');
 
 class ProductsService {
-  constructor() {
-    this.products = [];
-  }
+  constructor() {}
 
   // Generación de productos (Por el momento sin usar)
   generate() {
@@ -21,60 +19,37 @@ class ProductsService {
     }
   }
 
-  async generateOne(data) {
-    const newProduct = {
-      id: faker.string.uuid(),
-      ...data,
-    };
-    this.products.push(newProduct);
+  async create(data) {
+    const newProduct = await models.Product.create(data);
     return newProduct;
   }
   // Consulta de productos
   async find() {
-    const query = 'SELECT * FROM tasks';
-    const [data] = await sequelize.query(query);
-    return data;
+    const products = await models.Product.findAll({ include: 'category' });
+    return products;
   }
 
   async findOne(id) {
-    const product = this.products.find((product) => product.id === id);
-    if (product === undefined) {
+    const product = await models.Product.findByPk(id, {
+      include: ['category'],
+    });
+    if (!product) {
       throw boom.notFound('Product Not Found');
     } else {
       return product;
     }
   }
   // Edición de productos
-  async update(id, updatedData) {
-    // Actualiza esto poniendo la validación del -1
-    let index = this.products.findIndex((product) => product.id === id);
-    if (index === -1) {
-      throw boom.notFound('Product Not Found');
-    } else {
-      const productData = this.products[index];
-      this.products[index] = {
-        // El spread operator aquí permite actualizar datos.
-        ...productData,
-        ...updatedData,
-      };
-      return {
-        message: 'updated',
-        data: this.products[index],
-      };
-    }
+  async update(id, changes) {
+    const product = await this.findOne(id);
+    const response = await product.update(changes);
+    return response;
   }
   // Eliminación de productos
   async delete(id) {
-    const index = this.products.findIndex((product) => product.id === id);
-    if (index === -1) {
-      throw boom.notFound('Product Not Found');
-    } else {
-      this.products.splice(index, 1);
-      return {
-        message: 'deleted',
-        id,
-      };
-    }
+    const product = await this.findOne(id);
+    product.destroy();
+    return { id };
   }
 }
 
