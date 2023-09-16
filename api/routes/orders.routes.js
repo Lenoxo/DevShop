@@ -9,6 +9,7 @@ const {
   deleteOrderSchema,
   updateOrderSchema,
   getOrderSchema,
+  addItemSchema,
 } = require('../schemas/orders.schema');
 
 router.get('/', async (req, res) => {
@@ -37,6 +38,16 @@ router.post(
     res.status(201).json({
       newOrder,
     });
+  },
+);
+
+router.post(
+  '/add-item',
+  validatorHandler(addItemSchema, 'body'),
+  async (req, res) => {
+    const body = req.body;
+    const newItem = await service.addItem(body);
+    res.status(201).json(newItem);
   },
 );
 

@@ -12,6 +12,21 @@ const orderSchema = {
     type: DataTypes.INTEGER,
   },
 
+  // Este tipo de dato, solo existe en Node. No se escribe en la DB.
+  totalPrice: {
+    type: DataTypes.VIRTUAL,
+    // Este get, usando reduce, es util para operaciones con pocos elementos, pero no escala bien.
+    get() {
+      if (this.items.length > 0) {
+        return this.items.reduce((total, item) => {
+          return (total = item.price * item.OrderProduct.amount);
+        });
+      } else {
+        return 0;
+      }
+    },
+  },
+
   customerId: {
     allowNull: false,
     type: DataTypes.INTEGER,
