@@ -11,11 +11,6 @@ const orderSchema = {
     autoIncrement: true,
     type: DataTypes.INTEGER,
   },
-  // totalProducts: {
-  //   allowNull: false,
-  //   field: 'total_products',
-  //   type: DataTypes.INTEGER,
-  // },
 
   customerId: {
     allowNull: false,
@@ -40,6 +35,13 @@ const orderSchema = {
 class Order extends Model {
   static associate(models) {
     this.belongsTo(models.Customer, { as: 'customer' });
+    // Esta relación es muchos a muchos (N:N)
+    this.belongsToMany(models.Product, {
+      as: 'items',
+      through: models.OrderProduct,
+      foreignKey: 'orderId',
+      otherKey: 'productId',
+    });
   }
   // sequelize aquí hace referencia a la conexión que se recibe.
   static config(sequelize) {
