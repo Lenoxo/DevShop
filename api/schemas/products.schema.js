@@ -7,6 +7,8 @@ const description = Joi.string().min(10);
 const price = Joi.number().min(5);
 const image = Joi.string().uri();
 const categoryId = Joi.number().min(1);
+const limit = Joi.number().integer();
+const offset = Joi.number().integer();
 
 // Justo aquí es de donde hablo de .required
 const createProductSchema = Joi.object({
@@ -30,9 +32,15 @@ const getProductSchema = Joi.object({
   id: id.required(),
 });
 
+const queryProductSchema = Joi.object({
+  limit,
+  offset,
+});
+
 module.exports = {
   createProductSchema,
   updateProductSchema,
   deleteProductSchema,
   getProductSchema,
+  queryProductSchema,
 };
