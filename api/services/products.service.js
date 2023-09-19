@@ -46,8 +46,7 @@ class ProductsService {
 
     if (price_min && price_max) {
       options.where.price = {
-        [Op.gte]: price_min,
-        [Op.lte]: price_max,
+        [Op.between]: [price_min, price_max],
       };
     }
 
