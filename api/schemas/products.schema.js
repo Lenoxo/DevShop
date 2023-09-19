@@ -4,11 +4,13 @@ const Joi = require('joi');
 const id = Joi.number().min(1);
 const name = Joi.string().min(3).max(40);
 const description = Joi.string().min(10);
-const price = Joi.number().min(5);
+const price = Joi.number().min(1);
 const image = Joi.string().uri();
 const categoryId = Joi.number().min(1);
 const limit = Joi.number().integer();
 const offset = Joi.number().integer();
+const price_min = Joi.number().integer();
+const price_max = Joi.number().integer();
 
 // Justo aquí es de donde hablo de .required
 const createProductSchema = Joi.object({
@@ -35,6 +37,13 @@ const getProductSchema = Joi.object({
 const queryProductSchema = Joi.object({
   limit,
   offset,
+  price,
+  price_min,
+  // Esta es una restricción, que pide que se mande junto a un price_min un price_max
+  price_max: price_max.when('price_min', {
+    is: Joi.number().integer().required(),
+    then: Joi.required(),
+  }),
 });
 
 module.exports = {
