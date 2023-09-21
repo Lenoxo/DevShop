@@ -13,12 +13,6 @@ let options = {
   },
   // Forma antigua:
   // logging: true
-
-  dialectOptions: {
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  },
 };
 
 if (config.isProd) {
