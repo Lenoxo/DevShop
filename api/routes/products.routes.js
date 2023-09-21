@@ -8,13 +8,18 @@ const {
   deleteProductSchema,
   getProductSchema,
   updateProductSchema,
+  queryProductSchema,
 } = require('../schemas/products.schema');
 
 // Manejo con get.
-router.get('/', async (req, res) => {
-  const products = await service.find();
-  res.status(200).json(products);
-});
+router.get(
+  '/',
+  validatorHandler(queryProductSchema, 'query'),
+  async (req, res) => {
+    const products = await service.find(req.query);
+    res.status(200).json(products);
+  },
+);
 // Este endpoint es solo de prueba, para mostrar como evitar un colapso de endpoints.
 router.get('/filter', async (req, res) => {
   res
@@ -42,9 +47,9 @@ router.post(
   validatorHandler(createProductSchema, 'body'),
   async (req, res) => {
     const body = req.body;
-    const newProduct = await service.generateOne(body);
+    const newProduct = await service.create(body);
     res.status(201).json({
-      state: 'created',
+      message: 'created',
       data: newProduct,
     });
   },

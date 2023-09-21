@@ -1,58 +1,37 @@
 const { faker } = require('@faker-js/faker');
+const { models } = require('../libs/sequelize');
+const boom = require('@hapi/boom');
 
 class usersService {
-  constructor() {
-    this.users = [];
-    this.generate();
+  constructor() {}
+
+  async find() {
+    const response = await models.User.findAll({ include: ['customer'] });
+    return response;
   }
 
-  generate() {
-    const limit = 10;
-    for (let i = 0; i < limit; i++) {
-      // Generen usuarios
-      const user = {
-        id: faker.string.uuid(),
-        name: faker.person.firstName(),
-        businessArea: faker.person.jobArea(),
-      };
-      this.users.push(user);
+  async findOne(id) {
+    const user = await models.User.findByPk(id, { include: ['customer'] });
+    if (!user) {
+      throw boom.notFound('User Not Found');
+    } else {
+      return user;
     }
   }
-  createOne(data) {
-    const newUser = {
-      id: faker.string.uuid(),
-      ...data,
-    };
-    this.users.push(newUser);
+
+  async createOne(data) {
+    const newUser = await models.User.create(data, { include: ['customer'] });
     return newUser;
   }
-  update(id, editedData) {
-    const index = this.users.findIndex((user) => user.id === id);
-    if (index === -1) {
-      throw new Error('User Not Found');
-    } else {
-      const userData = this.users[index];
-      this.users[index] = {
-        ...userData,
-        ...editedData,
-      };
-      return {
-        status: 'edited',
-        userData: this.users[index],
-      };
-    }
+  async update(id, editedData) {
+    const user = await this.findOne(id);
+    const response = await user.update(editedData);
+    return response;
   }
-  delete(id) {
-    const index = this.users.findIndex((user) => user.id === id);
-    if (index === -1) {
-      throw new Error('User Not Found');
-    } else {
-      this.users.splice(index, 1);
-      return {
-        id,
-        status: 'deleted',
-      };
-    }
+  async delete(id) {
+    const user = await this.findOne(id);
+    await user.destroy(); // Permite borrar un registro de la DB.
+    return { id };
   }
 }
 

@@ -1,13 +1,12 @@
 const { faker } = require('@faker-js/faker');
 const boom = require('@hapi/boom');
+const { models } = require('../libs/sequelize');
+const { Op } = require('sequelize');
 
 class ProductsService {
-  constructor() {
-    this.products = [];
-    this.generate();
-  }
+  constructor() {}
 
-  // Generación de productos
+  // Generación de productos (Por el momento sin usar)
   generate() {
     const limit = 100;
     // Este bucle genera productos dependiendo del valor de limit.
@@ -21,63 +20,61 @@ class ProductsService {
     }
   }
 
-  async generateOne(data) {
-    const newProduct = {
-      id: faker.string.uuid(),
-      ...data,
-    };
-    this.products.push(newProduct);
+  async create(data) {
+    const newProduct = await models.Product.create(data);
     return newProduct;
   }
   // Consulta de productos
-  async find() {
-    // En este caso, emulo asincronismo usando el setTimeout.
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(this.products);
-      }, 2000);
-    });
+  async find(query) {
+    const { limit, offset, price, price_min, price_max } = query;
+
+    const options = {
+      include: 'category',
+      // Este where más adelante, se usa para los filtrados en el query con sequelize.
+      where: {},
+    };
+
+    if (limit && offset) {
+      options.limit = limit;
+      options.offset = offset;
+    }
+
+    // Filtrados con where en sequelize
+    if (price) {
+      options.where.price = price;
+    }
+
+    if (price_min && price_max) {
+      options.where.price = {
+        [Op.between]: [price_min, price_max],
+      };
+    }
+
+    const products = await models.Product.findAll(options);
+    return products;
   }
 
   async findOne(id) {
-    const product = this.products.find((product) => product.id === id);
-    if (product === undefined) {
+    const product = await models.Product.findByPk(id, {
+      include: ['category'],
+    });
+    if (!product) {
       throw boom.notFound('Product Not Found');
     } else {
       return product;
     }
   }
   // Edición de productos
-  async update(id, updatedData) {
-    // Actualiza esto poniendo la validación del -1
-    let index = this.products.findIndex((product) => product.id === id);
-    if (index === -1) {
-      throw boom.notFound('Product Not Found');
-    } else {
-      const productData = this.products[index];
-      this.products[index] = {
-        // El spread operator aquí permite actualizar datos.
-        ...productData,
-        ...updatedData,
-      };
-      return {
-        state: 'updated',
-        data: this.products[index],
-      };
-    }
+  async update(id, changes) {
+    const product = await this.findOne(id);
+    const response = await product.update(changes);
+    return response;
   }
   // Eliminación de productos
   async delete(id) {
-    const index = this.products.findIndex((product) => product.id === id);
-    if (index === -1) {
-      throw boom.notFound('Product Not Found');
-    } else {
-      this.products.splice(index, 1);
-      return {
-        state: 'deleted',
-        id,
-      };
-    }
+    const product = await this.findOne(id);
+    product.destroy();
+    return { id };
   }
 }
 
