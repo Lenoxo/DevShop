@@ -1,4 +1,3 @@
-const { faker } = require('@faker-js/faker');
 const { models } = require('../libs/sequelize');
 const boom = require('@hapi/boom');
 

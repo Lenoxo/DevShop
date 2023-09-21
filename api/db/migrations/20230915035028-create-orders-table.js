@@ -6,7 +6,7 @@ const { CUSTOMER_TABLE } = require('../models/customer.model');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up(queryInterface) {
     await queryInterface.createTable(ORDER_TABLE, {
       id: {
         allowNull: false,
@@ -36,7 +36,7 @@ module.exports = {
     });
   },
 
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable(ORDER_TABLE);
   },
 };

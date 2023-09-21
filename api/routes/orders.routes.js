@@ -6,8 +6,6 @@ const service = new OrdersService();
 const validatorHandler = require('../middlewares/validator.handler');
 const {
   createOrderSchema,
-  deleteOrderSchema,
-  updateOrderSchema,
   getOrderSchema,
   addItemSchema,
 } = require('../schemas/orders.schema');

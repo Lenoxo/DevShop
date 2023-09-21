@@ -51,9 +51,7 @@ const orderProductSchema = {
 };
 
 class OrderProduct extends Model {
-  static associate(models) {
-    // CAMBIOS PENDIENTES DESDE AQUÍ
-  }
+  static associate() {}
   // sequelize aquí hace referencia a la conexión que se recibe.
   static config(sequelize) {
     return {

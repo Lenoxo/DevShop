@@ -6,7 +6,7 @@ const { DataTypes } = require('sequelize');
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   // up se usa para ejecutar pasos en la migración
-  async up(queryInterface, Sequelize) {
+  async up(queryInterface) {
     await queryInterface.createTable(USER_TABLE, {
       id: {
         allowNull: false,
@@ -32,7 +32,7 @@ module.exports = {
     });
   },
   // down se usa para revertir los pasos de la migración
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable(USER_TABLE);
   },
 };
