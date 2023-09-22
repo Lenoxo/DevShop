@@ -15,9 +15,13 @@ const {
 router.get(
   '/',
   validatorHandler(queryProductSchema, 'query'),
-  async (req, res) => {
-    const products = await service.find(req.query);
-    res.status(200).json(products);
+  async (req, res, next) => {
+    try {
+      const products = await service.find(req.query);
+      res.status(200).json(products);
+    } catch (error) {
+      next(error);
+    }
   },
 );
 // Este endpoint es solo de prueba, para mostrar como evitar un colapso de endpoints.
@@ -45,13 +49,17 @@ router.get(
 router.post(
   '/',
   validatorHandler(createProductSchema, 'body'),
-  async (req, res) => {
-    const body = req.body;
-    const newProduct = await service.create(body);
-    res.status(201).json({
-      message: 'created',
-      data: newProduct,
-    });
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const newProduct = await service.create(body);
+      res.status(201).json({
+        message: 'created',
+        data: newProduct,
+      });
+    } catch (error) {
+      next(error);
+    }
   },
 );
 
