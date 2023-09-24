@@ -21,6 +21,8 @@ app.use(cors());
 app.get('/api', checkApiKey, (req, res) => {
   res.send('Hola que tal, ya funciona!');
 });
+// Import dinámico para usar passport.
+require('./utils/auth');
 
 // uso de routerApi
 routerApi(app);

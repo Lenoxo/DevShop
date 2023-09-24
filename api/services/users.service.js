@@ -19,6 +19,15 @@ class usersService {
     }
   }
 
+  async findByEmail(email) {
+    const response = await models.User.findOne({
+      where: {
+        email,
+      },
+    });
+    return response;
+  }
+
   async createOne(data) {
     const userPassword = data.password;
     const hash = await bcrypt.hash(userPassword, 10);
