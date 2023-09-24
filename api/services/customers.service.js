@@ -37,6 +37,7 @@ class customersService {
     const newCustomer = await models.Customer.create(updatedData, {
       include: ['user'],
     });
+    delete newCustomer.dataValues.user.dataValues.password;
     return newCustomer;
   }
   async update(id, editedData) {

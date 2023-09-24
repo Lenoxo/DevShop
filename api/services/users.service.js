@@ -22,13 +22,15 @@ class usersService {
   async createOne(data) {
     const userPassword = data.password;
     const hash = await bcrypt.hash(userPassword, 10);
-    const updatedData = {
-      ...data,
-      password: hash,
-    };
-    const newUser = await models.User.create(updatedData, {
-      include: ['customer'],
-    });
+    const newUser = await models.User.create(
+      {
+        ...data,
+        password: hash,
+      },
+      {
+        include: ['customer'],
+      },
+    );
     // Esto lo hago para remover de la respuesta, el hash generado en password.
     delete newUser.dataValues.password;
     return newUser;
