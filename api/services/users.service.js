@@ -1,4 +1,5 @@
 const { models } = require('../libs/sequelize');
+const bcrypt = require('bcrypt');
 const boom = require('@hapi/boom');
 
 class usersService {
@@ -19,7 +20,17 @@ class usersService {
   }
 
   async createOne(data) {
-    const newUser = await models.User.create(data, { include: ['customer'] });
+    const userPassword = data.password;
+    const hash = await bcrypt.hash(userPassword, 10);
+    const updatedData = {
+      ...data,
+      password: hash,
+    };
+    const newUser = await models.User.create(updatedData, {
+      include: ['customer'],
+    });
+    // Esto lo hago para remover de la respuesta, el hash generado en password.
+    delete newUser.dataValues.password;
     return newUser;
   }
   async update(id, editedData) {
