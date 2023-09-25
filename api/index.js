@@ -8,7 +8,7 @@ const {
   sequelizeErrorHandler,
 } = require('./middlewares/error.handler');
 const cors = require('cors');
-const checkApiKey = require('./middlewares/auth.handler');
+const { checkApiKey } = require('./middlewares/auth.handler');
 const app = express();
 const port = config.port;
 
