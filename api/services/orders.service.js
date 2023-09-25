@@ -3,8 +3,19 @@ const { models } = require('../libs/sequelize');
 
 class OrdersService {
   constructor() {}
-  async create(data) {
-    const newOrder = await models.Order.create(data);
+  async create(userId) {
+    const customer = await models.Customer.findOne({
+      where: {
+        '$user.id$': userId,
+      },
+      include: ['user'],
+    });
+
+    if (!customer) {
+      throw boom.badRequest('Customer Not Found');
+    }
+
+    const newOrder = await models.Order.create({ customerId: customer.id });
     return newOrder;
   }
 
@@ -18,7 +29,7 @@ class OrdersService {
     return orders;
   }
 
-  async findByUser(userId) {
+  async findOrdersByUser(userId) {
     const orders = await models.Order.findAll({
       where: {
         // Al usar los simbolos de $, se comparan los datos en el query como están en la db.

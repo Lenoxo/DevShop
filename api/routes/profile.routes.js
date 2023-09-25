@@ -10,7 +10,7 @@ router.get(
   async (req, res, next) => {
     try {
       const userId = req.user.sub;
-      const orders = await service.findByUser(userId);
+      const orders = await service.findOrdersByUser(userId);
       res.json(orders);
     } catch (error) {
       next(error);
