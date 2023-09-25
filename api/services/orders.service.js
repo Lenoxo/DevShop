@@ -18,6 +18,22 @@ class OrdersService {
     return orders;
   }
 
+  async findByUser(userId) {
+    const orders = await models.Order.findAll({
+      where: {
+        // Al usar los simbolos de $, se comparan los datos en el query como están en la db.
+        '$customer.user.id$': userId,
+      },
+      include: [
+        {
+          association: 'customer',
+          include: 'user',
+        },
+      ],
+    });
+    return orders;
+  }
+
   async findOne(id) {
     const order = await models.Order.findByPk(id, {
       // Este es un anidamiento del join de los modelos de Customer y User con el de Orders.

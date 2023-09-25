@@ -12,8 +12,8 @@ const {
 
 router.get('/', async (req, res, next) => {
   try {
-    const products = await service.find();
-    res.status(200).json(products);
+    const orders = await service.find();
+    res.status(200).json(orders);
   } catch (error) {
     next(error);
   }
