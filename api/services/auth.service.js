@@ -34,11 +34,28 @@ class AuthService {
     };
   }
 
-  async sendEmail(email) {
+  async sendRecovery(email) {
     const user = await service.findByEmail(email);
     if (!user) {
       throw boom.unauthorized();
     }
+
+    const payload = { sub: user.id };
+
+    const token = jwt.sign(payload, config.jwtSecret, { expiresIn: '15min' });
+    await service.update(user.id, { recoveryToken: token });
+    const link = `http://elfrontendlomaneja.com/recovery?token=${token}`;
+    const mail = {
+      from: `${config.nodemailerEmail}`, // sender address
+      to: `${email}`, // list of receivers
+      subject: 'Recovery Password', // Subject line
+      text: 'This is your recovery password link, click it and use it to change your password. This link expires in 15 minutes.', // plain text body
+      html: `<b>Link: ${link}</b>`, // html body
+    };
+    await this.sendEmail(mail);
+  }
+
+  async sendEmail(infoEmail) {
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       // Secure Port: 465, Not Secure Port: 587
@@ -50,13 +67,7 @@ class AuthService {
       },
     });
     // send mail with defined transport object
-    await transporter.sendMail({
-      from: `${config.nodemailerEmail}`, // sender address
-      to: `${email}`, // list of receivers
-      subject: 'Recovery Password', // Subject line
-      text: 'Coming Soon!', // plain text body
-      html: '<b>Coming Soon!</b>', // html body
-    });
+    await transporter.sendMail(infoEmail);
   }
 }
 
