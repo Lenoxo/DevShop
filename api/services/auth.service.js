@@ -13,7 +13,7 @@ class AuthService {
     if (!user) {
       throw boom.unauthorized();
     }
-    const isMatch = bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw boom.unauthorized();
     }
@@ -28,6 +28,7 @@ class AuthService {
       role: user.role,
     };
     const token = jwt.sign(payload, secret);
+    delete user.dataValues.recoveryToken;
     return {
       user,
       token,
@@ -68,6 +69,23 @@ class AuthService {
     });
     // send mail with defined transport object
     await transporter.sendMail(infoEmail);
+  }
+
+  async updatePassword(token, newPassword) {
+    try {
+      const payload = jwt.verify(token, config.jwtSecret);
+      const user = await service.findOne(payload.sub);
+      console.log(user);
+      if (user.recoveryToken !== token) {
+        throw boom.unauthorized();
+      }
+      // Recuerda usar await al usar métodos de bcrypt.
+      const hash = await bcrypt.hash(newPassword, 10);
+      await service.update(user.id, { recoveryToken: null, password: hash });
+      return { message: 'Password Changed' };
+    } catch (error) {
+      throw boom.unauthorized();
+    }
   }
 }
 
