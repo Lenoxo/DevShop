@@ -12,6 +12,7 @@ function checkApiKey(req, res, next) {
   }
 }
 
+// Esta es otra forma de hacer autorización por roles.
 function checkAdminRole(req, res, next) {
   const { role } = req.user;
   if (role === 'admin') {

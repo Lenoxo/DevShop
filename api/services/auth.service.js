@@ -75,7 +75,6 @@ class AuthService {
     try {
       const payload = jwt.verify(token, config.jwtSecret);
       const user = await service.findOne(payload.sub);
-      console.log(user);
       if (user.recoveryToken !== token) {
         throw boom.unauthorized();
       }
