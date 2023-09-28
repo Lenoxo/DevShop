@@ -6,9 +6,9 @@ const secret = config.jwtSecret;
 const token =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5NTYwNzYyMX0.0wj2UKl5eSep1go5MfT908sRRC-nQypwcd3YdNUN08o';
 
-function signToken(token, secret) {
+function verifyToken(token, secret) {
   return jwt.verify(token, secret);
 }
 
-const payload = signToken(token, secret);
+const payload = verifyToken(token, secret);
 console.log(payload);
