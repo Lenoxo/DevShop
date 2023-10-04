@@ -7,11 +7,11 @@ const {
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  async up(queryInterface) {
     await queryInterface.createTable(ORDER_PRODUCT_TABLE, orderProductSchema);
   },
 
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable(ORDER_PRODUCT_TABLE);
   },
 };

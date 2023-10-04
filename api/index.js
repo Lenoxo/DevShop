@@ -8,6 +8,7 @@ const {
   sequelizeErrorHandler,
 } = require('./middlewares/error.handler');
 const cors = require('cors');
+const { checkApiKey } = require('./middlewares/auth.handler');
 const app = express();
 const port = config.port;
 
@@ -17,9 +18,11 @@ app.use(express.json());
 // Habilito uso de cors para todos los origenes
 app.use(cors());
 
-app.get('/api', (req, res) => {
+app.get('/api', checkApiKey, (req, res) => {
   res.send('Hola que tal, ya funciona!');
 });
+// Import dinámico para usar passport.
+require('./utils/auth');
 
 // uso de routerApi
 routerApi(app);
