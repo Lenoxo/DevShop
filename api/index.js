@@ -1,4 +1,5 @@
 const express = require('express');
+const app = express();
 const routerApi = require('./routes');
 const config = require('./config/config');
 const {
@@ -9,9 +10,14 @@ const {
 } = require('./middlewares/error.handler');
 const cors = require('cors');
 const { checkApiKey } = require('./middlewares/auth.handler');
-const app = express();
 const port = config.port;
+const fs = require('fs');
+const YAML = require('yaml');
 const swaggerUi = require('swagger-ui-express');
+
+// Parseo de archivo de swagger yaml a json
+const file = fs.readFileSync(`${__dirname}/swagger.yaml`, 'utf8');
+const swaggerDocument = YAML.parse(file);
 
 // Este middleware permite manejar peticiones con formato JSON.
 app.use(express.json());
@@ -35,11 +41,7 @@ app.use(sequelizeErrorHandler);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 
-// const specs = jsdoc(swaggerOptions);
-const swaggerFile = require('./openapi.json');
-
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(port, () => {
   console.log('Servidor abierto en el puerto: ' + port);

@@ -1,0 +1,18 @@
+openapi: 3.0.0
+info:
+  title: DevShop API - OpenAPI 3.0
+  description: |-
+    This is a test API that simulates an ecommerce API interaction, made for learning how to use Node.js for the Backend. hope it helps.
+    Some useful links:
+    - [The DevShop repository]()
+    - [The source API definition for the DevShop](pending...)
+  # contact:
+  #   github: https://github.com/Lenoxo
+  license:
+    name: MIT
+    url: https://opensource.org/license/mit/
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:{port}/api/v1/
+  - description: This would be your local server direction.

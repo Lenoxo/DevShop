@@ -47,6 +47,7 @@
     "sequelize": "^6.33.0",
     "sequelize-cli": "^6.6.1",
     "sqlite3": "^5.1.6",
-    "swagger-ui-express": "^4.1.5"
+    "swagger-ui-express": "^4.1.5",
+    "yaml": "^2.3.3"
   }
 }
