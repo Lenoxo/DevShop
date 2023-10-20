@@ -3,11 +3,13 @@ info:
   title: DevShop API - OpenAPI 3.0
   description: |-
     This is a test API that simulates an ecommerce API interaction, made for learning how to use Node.js for the Backend. hope it helps.
+
     Some useful links:
-    - [The DevShop repository]()
+    - [The DevShop repository](https://github.com/Lenoxo/DevShop)
     - [The source API definition for the DevShop](pending...)
-  # contact:
-  #   github: https://github.com/Lenoxo
+  contact:
+    name: Emanuel Padilla (Lenoxo)
+    url: https://emanueldev.vercel.app/
   license:
     name: MIT
     url: https://opensource.org/license/mit/
@@ -15,4 +17,106 @@ info:
 
 servers:
   - url: http://localhost:{port}/api/v1/
-  - description: This would be your local server direction.
+    description: Local server direction.
+    variables:
+      port:
+        default: "3000"
+  - url: https://backend-ecommerce-production-a555.up.railway.app/api/v1/
+    description: Production server url.
+
+paths:
+  /products:
+    get:
+      summary: Get a list of products
+      responses:
+        200:
+          description: List of products
+    post:
+      summary: Create a new product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        201:
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+  /products/filter:
+    get:
+      summary: Test endpoint to avoid endpoint collision
+      responses:
+        200:
+          description: Message to indicate the avoidance of endpoint collision
+  /products/{id}:
+    get:
+      summary: Get a product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the product to get
+      responses:
+        200:
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+    patch:
+      summary: Update a product partially
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the product to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        200:
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+    delete:
+      summary: Delete a product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the product to delete
+      responses:
+        200:
+          description: Product deleted
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: integer
+      required:
+        - name
+        - description
+        - price
