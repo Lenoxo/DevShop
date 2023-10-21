@@ -16,23 +16,26 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://localhost:{port}/api/v1/
+  - url: http://localhost:{port}/api/v1
     description: Local server direction.
     variables:
       port:
         default: "3000"
-  - url: https://backend-ecommerce-production-a555.up.railway.app/api/v1/
+  - url: https://backend-ecommerce-production-a555.up.railway.app/api/v1
     description: Production server url.
 
 paths:
+  # Products paths
   /products:
     get:
       summary: Get a list of products
+      tags: ["Products"]
       responses:
         200:
           description: List of products
     post:
       summary: Create a new product
+      tags: ["Products"]
       requestBody:
         required: true
         content:
@@ -48,13 +51,15 @@ paths:
                 $ref: "#/components/schemas/Product"
   /products/filter:
     get:
-      summary: Test endpoint to avoid endpoint collision
+      summary: Test endpoint to show how to avoid endpoint collision with Express.js
+      tags: ["Products"]
       responses:
         200:
           description: Message to indicate the avoidance of endpoint collision
   /products/{id}:
     get:
       summary: Get a product by ID
+      tags: ["Products"]
       parameters:
         - name: id
           in: path
@@ -71,6 +76,7 @@ paths:
                 $ref: "#/components/schemas/Product"
     patch:
       summary: Update a product partially
+      tags: ["Products"]
       parameters:
         - name: id
           in: path
@@ -93,6 +99,7 @@ paths:
                 $ref: "#/components/schemas/Product"
     delete:
       summary: Delete a product
+      tags: ["Products"]
       parameters:
         - name: id
           in: path
@@ -103,6 +110,124 @@ paths:
       responses:
         200:
           description: Product deleted
+
+  # Users paths
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get a list of users
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+      # security:
+    #        - []
+    post:
+      summary: Create a new user
+      tags:
+        - Users
+      requestBody:
+        description: User data to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+      # security:
+  #        - []
+
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+      # security:
+    #        - []
+
+    patch:
+      summary: Update a user by ID
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+      # security:
+    #        - []
+
+    delete:
+      summary: Delete a user by ID
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+      # security:
+#        - []
+
+tags:
+  - name: Users
+    description: Operations related to users
+  - name: Products
+    description: Operations related to products
+  - name: Orders
+    description: Operations related to orders
+  - name: Categories
+    description: Operations related to categories
+  - name: Customers
+    description: Operations related to customers
+
 components:
   schemas:
     Product:
@@ -110,13 +235,195 @@ components:
       properties:
         id:
           type: integer
+          description: The auto-generated ID of the product
         name:
           type: string
+          description: The name of the product
         description:
           type: string
+          description: A description of the product
         price:
           type: integer
-      required:
-        - name
-        - description
-        - price
+          description: The price of the product
+        image:
+          type: string
+          description: URL to the product's image
+        categoryId:
+          type: integer
+          description: The ID of the product's category
+        createdAt:
+          type: string
+          format: date
+          description: The date the product was created
+      example:
+        id: 1
+        name: Sample Product
+        description: This is a sample product.
+        price: 50
+        image: https://example.com/product.jpg
+        categoryId: 2
+        createdAt: 2023-08-15
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+          maxLength: 20
+        role:
+          type: string
+        recoveryToken:
+          type: string
+          default: null
+        createdAt:
+          type: string
+          format: date-time
+        customer:
+          type: object
+      example:
+        id: 3
+        email: example@mail.com
+        password: $2b$10$U4dauOa8o.Hjoq.8ls9NMebHdE.3No4y7LmmmHO9N6d17LtmwD5Uq
+        role: admin
+        recoveryToken: null
+        createdAt: 2023-09-23T03:32:16.170Z
+        customer:
+          id: 1,
+          name: yedi,
+          lastName: master,
+          phone: 123123154,
+          createdAt: 2023-09-23T03:32:16.170Z,
+          userId: 3
+    PostCustomer:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+          maxLength: 20
+        role:
+          type: string
+        customer:
+          type: object
+      example:
+        id: 3
+        email: example@mail.com
+        password: youre doing great
+        role: admin
+        customer:
+          name: yedi,
+          lastName: master,
+          phone: 123123154,
+          userId: 3
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the product
+        email:
+          type: string
+          format: email
+          description: The email associated with the product
+        password:
+          type: string
+          minLength: 6
+          maxLength: 20
+          description: The password of the product
+        role:
+          type: string
+          description: The role of the product
+        createdAt:
+          type: string
+          format: date-time
+          description: The creation date of the product
+    # Corregir más adelante el uso de esta parte
+    CustomerRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Customer's first name
+        lastName:
+          type: string
+          description: Customer's last name
+        phone:
+          type: string
+          description: Customer's phone number
+        userId:
+          type: integer
+          description: ID of the associated user
+    CustomerResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Customer ID
+        name:
+          type: string
+          description: Customer's first name
+        lastName:
+          type: string
+          description: Customer's last name
+        phone:
+          type: string
+          description: Customer's phone number
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time of creation
+        userId:
+          type: integer
+          description: ID of the associated user
+    # Hasta esta parte
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The auto-generated ID of the order
+        totalPrice:
+          type: integer
+          description: The total price of the order
+        customerId:
+          type: integer
+          description: The ID of the customer who placed the order
+        date:
+          type: string
+          format: date
+          description: The date the order was placed
+      example:
+        id: 1
+        totalPrice: 100
+        customerId: 2
+        date: 2023-08-15
+    OrderProduct:
+      type: object
+      properties:
+        orderId:
+          type: integer
+          description: The ID of the order
+        productId:
+          type: integer
+          description: The ID of the product in the order
+        amount:
+          type: integer
+          description: The quantity of the product in the order
+        date:
+          type: string
+          format: date
+          description: The date the order was placed
+      example:
+        orderId: 1
+        productId: 3
+        amount: 2
+        date: 2023-08-15
