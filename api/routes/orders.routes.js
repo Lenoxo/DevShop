@@ -26,9 +26,7 @@ router.get(
     try {
       const { id } = req.params;
       const order = await service.findOne(id);
-      res.status(200).json({
-        order,
-      });
+      res.status(200).json(order);
     } catch (error) {
       next(error);
     }
@@ -43,9 +41,7 @@ router.post(
     try {
       const userId = req.user.sub;
       const newOrder = await service.create(userId);
-      res.status(201).json({
-        newOrder,
-      });
+      res.status(201).json(newOrder);
     } catch (error) {
       next(error);
     }

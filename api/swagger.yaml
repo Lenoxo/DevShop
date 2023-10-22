@@ -1,0 +1,1204 @@
+openapi: 3.0.0
+info:
+  title: DevShop API - OpenAPI 3.0
+  description: |-
+    This is a test API that simulates an ecommerce API interaction, made for learning how to use Node.js and it's technologies ecosystem for the Backend. hope it helps.
+
+    For completing request to protected endpoints, you need to authenticate, click the Authorize green button and give it this values:
+      - **JWTToken  (http, Bearer)**: Use a new token logging in ``/auth/login`` or use this token for the meantime:
+
+        <details>
+        <summary>Show the sample JWT</summary>
+            ``eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY5NzkxOTU0MH0.jZcLU3oMUGAKordYnhDdMo8eL-8Jh5XfeJtgseICSug``
+        </details>
+
+    Some useful links:
+    - [The DevShop repository](https://github.com/Lenoxo/DevShop)
+    - [The source API definition for the DevShop](pending...)
+  contact:
+    name: Emanuel Padilla (Lenoxo)
+    url: https://emanueldev.vercel.app/
+  license:
+    name: MIT
+    url: https://opensource.org/license/mit/
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:{port}/api/v1
+    description: Local server direction.
+    variables:
+      port:
+        default: "3000"
+  - url: https://backend-ecommerce-production-a555.up.railway.app/api/v1
+    description: Production server url.
+
+paths:
+  # auth paths
+  /auth/login:
+    post:
+      summary: Login a user
+      description: The succesfull login will give you a token, that is required to authorize your access to protected endpoints
+      operationId: loginUser
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: idn-email
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    example:
+                      user:
+                        id: 5
+                        email: emanu1@example.com
+                        role: customer
+                        createdAt: "2023-09-23T03:32:16.170Z"
+                      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5NzkxNDQzOH0.uoAxA78kT2ZEvYkJfWp7P7VGqPQFNP_txBjKszkn5mE
+        "401":
+          description: Unauthorized
+
+  /auth/recovery:
+    post:
+      summary: Send recovery email
+      operationId: sendRecoveryEmail
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        "200":
+          description: Recovery email sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Recovery Email Sent, Check Your Inbox
+
+  /auth/change-password:
+    post:
+      summary: Change user password
+      operationId: changeUserPassword
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                newPassword:
+                  type: string
+      responses:
+        "200":
+          description: Password changed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Password Changed
+
+  # Categories paths
+  /categories:
+    get:
+      summary: Get all categories
+      operationId: getCategories
+      parameters:
+
+      tags:
+        - Categories
+      responses:
+        "200":
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    $ref: #/components/schemas/Product
+                example:
+                  - id: 1
+                    name: Electronics
+                    image: https://placeimg.com/640/480
+                    createdAt: "2023-09-23T03:23:17.327Z"
+                  - id: 2
+                    name: Furnitures
+                    image: https://placeimg.com/640/480
+                    createdAt: "2023-09-23T03:23:24.361Z"
+                  - id: 3
+                    name: Others
+                    image: https://placeimg.com/640/480
+                    createdAt: "2023-09-23T03:23:28.926Z"
+
+    post:
+      summary: Create a new category
+      operationId: createCategory
+      security:
+        - JWTToken: []
+      tags:
+        - Categories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                $ref: #/components/schemas/Category
+              example:
+                name: new Category 3
+                image: https://image.com/ja
+      responses:
+        "201":
+          description: Category created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  $ref: #/components/schemas/Category
+              example:
+                id: 1
+                name: Electronics
+                image: https://placeimg.com/640/480
+                createdAt: "2023-09-23T03:23:17.327Z"
+
+  /categories/{id}:
+    get:
+      summary: Get a category by ID
+      operationId: getCategoryById
+      security:
+        - JWTToken: []
+      tags:
+        - Categories
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Category details
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  name: Electronics
+                  image: https://placeimg.com/640/480
+                  createdAt: "2023-09-23T03:23:17.327Z"
+                  products:
+                    type: array
+    patch:
+      summary: Update a category
+      operationId: updateCategory
+      security:
+        - JWTToken: []
+      tags:
+        - Categories
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                $ref: #/components/schemas/Category
+              example:
+                name: Movies
+      responses:
+        "200":
+          description: Category updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 9
+                  name: Movies
+                  image: https://image.com/test
+                  createdAt: "2023-10-21T20:19:50.984Z"
+                  products: []
+
+    delete:
+      summary: Delete a category
+      operationId: deleteCategory
+      security:
+        - JWTToken: []
+      tags:
+        - Categories
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Category deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+
+  # Customers paths
+  /customers:
+    get:
+      summary: Get all customers
+      operationId: getCustomers
+      tags:
+        - Customers
+      responses:
+        "200":
+          description: Successful retrieval of customers
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  - id: 1
+                    name: emanu
+                    lastName: pelaez
+                    phone: "123123154"
+                    createdAt: "2023-09-23T03:32:16.170Z"
+                    userId: 5
+                    user:
+                      id: 5
+                      email: emanu1@example.com
+                      password: $2b$10$mMfF1HGJX/uBu3JAUw.iHuVlasq4OJll8LR.0UFTaE4eRICa8/Tsi
+                      role: admin
+                      recoveryToken: null
+                      createdAt: "2023-09-23T03:32:16.170Z"
+                  - id: 3
+                    name: harry
+                    lastName: olimpus
+                    phone: "15154595792"
+                    createdAt: "2023-09-24T19:43:12.159Z"
+                    userId: 10
+                    user:
+                      id: 10
+                      email: harry@example.com
+                      password: $2b$10$U4dauOa8o.Hjoq.8ls9NMebHdE.3No4y7LmmmHO9N6d17LtmwD5Uq
+                      role: customer
+                      recoveryToken: null
+                      createdAt: "2023-09-24T19:43:12.159Z"
+    post:
+      summary: Create a new customer
+      operationId: createCustomer
+      tags:
+        - Customers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: test
+                lastName: ramirez
+                phone: "54545454523"
+                user:
+                  name: test
+                  email: thisisnotadrill@example.com
+                  password: example again 23
+                  role: seller
+      responses:
+        "201":
+          description: Successful creation of a new customer
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  createdAt: "2023-10-21T23:14:06.091Z"
+                  id: 4
+                  name: test
+                  lastName: ramirez
+                  phone: "54545454523"
+                  user:
+                    createdAt: "2023-10-21T23:14:06.091Z"
+                    id: 14
+                    email: thisisnotadrill@example.com
+                    role: seller
+                    recoveryToken: null
+                  userId: 14
+
+  /customers/{id}:
+    get:
+      summary: Get a customer by ID
+      operationId: getCustomerById
+      tags:
+        - Customers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful retrieval of the customer
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  name: emanu
+                  lastName: pelaez
+                  phone: "123123154"
+                  createdAt: "2023-09-23T03:32:16.170Z"
+                  userId: 5
+                  user:
+                    id: 5
+                    email: emanu1@example.com
+                    password: $2b$10$mMfF1HGJX/uBu3JAUw.iHuVlasq4OJll8LR.0UFTaE4eRICa8/Tsi
+                    role: seller
+                    recoveryToken: null
+                    createdAt: "2023-09-23T03:32:16.170Z"
+
+    patch:
+      summary: Update a customer by ID
+      operationId: updateCustomer
+      tags:
+        - Customers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                lastName: mendez
+      responses:
+        "200":
+          description: Successful update of the customer
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  name: emanu
+                  lastName: mendez
+                  phone: "123123154"
+                  createdAt: "2023-09-23T03:32:16.170Z"
+                  userId: 5
+                  user:
+                    id: 5
+                    email: emanu1@example.com
+                    password: $2b$10$mMfF1HGJX/uBu3JAUw.iHuVlasq4OJll8LR.0UFTaE4eRICa8/Tsi
+                    role: seller
+                    recoveryToken: null
+                    createdAt: "2023-09-23T03:32:16.170Z"
+    delete:
+      summary: Delete a customer by ID
+      operationId: deleteCustomer
+      tags:
+        - Customers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful deletion of the customer
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 5
+
+  # Orders paths
+  /orders:
+    get:
+      summary: Get all orders
+      operationId: getAllOrders
+      tags:
+        - Orders
+      responses:
+        "200":
+          description: Successful retrieval of orders
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  - totalPrice: 0
+                    id: 1
+                    customerId: 3
+                    date: "2023-09-25T19:13:24.145Z"
+                    customer:
+                      id: 3
+                      name: harry
+                      lastName: olimpus
+                      phone: "15154595792"
+                      createdAt: "2023-09-24T19:43:12.159Z"
+                      userId: 10
+
+    post:
+      summary: Create a new order
+      operationId: createOrder
+      security:
+        - JWTToken: []
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                customerId: 1
+      responses:
+        "201":
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  totalPrice: 0
+                  date: "2023-10-21T23:59:25.844Z"
+                  id: 4
+                  customerId: 1
+
+  /orders/{id}:
+    get:
+      summary: Get a specific order by ID
+      operationId: getOrderById
+      tags:
+        - Orders
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful retrieval of the order
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  totalPrice: 66
+                  id: 1
+                  customerId: 3
+                  date: "2023-09-25T19:13:24.145Z"
+                  customer:
+                    id: 3
+                    name: harry
+                    lastName: olimpus
+                    phone: "15154595792"
+                    createdAt: "2023-09-24T19:43:12.159Z"
+                    userId: 10
+                    user:
+                      id: 10
+                      email: harry@example.com
+                      password: $2b$10$U4dauOa8o.Hjoq.8ls9NMebHdE.3No4y7LmmmHO9N6d17LtmwD5Uq
+                      role: customer
+                      recoveryToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEwLCJpYXQiOjE2OTU2ODg1NjUsImV4cCI6MTY5NTY4OTQ2NX0.kuiFUPHlMQCuDQI1llE0kqbNasezh-qwjgI2CvbzsZ4"
+                      createdAt: "2023-09-24T19:43:12.159Z"
+                  items:
+                    - id: 3
+                      name: zapatos de jazz
+                      description: "Esta es una prueba de producto, no importa su contenido."
+                      price: 11
+                      image: https://image.com/example
+                      categoryId: 6
+                      createdAt: "2023-09-25T19:14:28.681Z"
+                      OrderProduct:
+                        id: 1
+                        orderId: 1
+                        productId: 3
+                        amount: 5
+                        date: "2023-09-25T19:35:14.323Z"
+
+  /orders/add-item:
+    post:
+      summary: Add an item to an order
+      operationId: addItemToOrder
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                productId: 3
+                orderId: 2
+                amount: 3
+      responses:
+        "201":
+          description: Item added to the order
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  date: "2023-10-22T00:12:11.790Z"
+                  id: 3
+                  productId: 3
+                  orderId: 2
+                  amount: 3
+
+  # Products paths
+  /products:
+    get:
+      summary: Get a list of products
+      operationId: getProducts
+      tags:
+        - Products
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of results to return.
+          required: false
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: Number of results to skip.
+          required: false
+          schema:
+            type: integer
+        - name: price
+          in: query
+          description: Price of the products.
+          required: false
+          schema:
+            type: number
+        - name: price_min
+          in: query
+          description: Minimum price of the products.
+          required: false
+          schema:
+            type: number
+        - name: price_max
+          in: query
+          description: Maximum price of the products (required when price_min is specified).
+          required: false
+          schema:
+            type: number
+
+      responses:
+        "200":
+          description: Successful retrieval of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+    post:
+      summary: Create a new product
+      operationId: createProduct
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: great watermelon
+                description: "A great watermelon, like the song..."
+                price: 20
+                image: https://image.com/example
+                categoryId: 4
+      responses:
+        "201":
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: created
+                  data:
+                    $ref: "#/components/schemas/Product"
+
+  /products/filter:
+    get:
+      summary: An example of how to avoid endpoint collapse
+      operationId: avoidCollapse
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Endpoint collapse avoided
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: If you can read this, we have avoided an endpoint collapse
+
+  /products/{id}:
+    get:
+      summary: Get a product by ID
+      operationId: getProductById
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful retrieval of a product
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 4
+                  name: great watermelon
+                  description: "A great watermelon, like the song..."
+                  price: 20
+                  image: https://image.com/example
+                  categoryId: 4
+                  createdAt: "2023-10-22T00:53:47.876Z"
+                  category:
+                    id: 4
+                    name: Food
+                    image: https://placeimg.com/640/480
+                    createdAt: "2023-09-25T02:49:38.116Z"
+
+    patch:
+      summary: Update a product partially
+      operationId: updateProduct
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: A greater watermelon
+      responses:
+        "200":
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+
+    delete:
+      summary: Delete a product
+      operationId: deleteProduct
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Product deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 4
+
+  # Profile paths
+  /profile/my-orders:
+    get:
+      summary: Get user orders
+      operationId: getMyOrders
+      security:
+        - JWTToken: []
+      tags:
+        - Profile
+      responses:
+        "200":
+          description: Orders retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  - totalPrice: 0
+                    id: 2
+                    customerId: 1
+                    date: "2023-09-25T19:17:03.813Z"
+                    customer:
+                      id: 1
+                      name: emanu
+                      lastName: mendez
+                      phone: "123123154"
+                      createdAt: "2023-09-23T03:32:16.170Z"
+                      userId: 5
+                      user:
+                        id: 5
+                        email: emanu1@example.com
+                        password: $2b$10$mMfF1HGJX/uBu3JAUw.iHuVlasq4OJll8LR.0UFTaE4eRICa8/Tsi
+                        role: admin
+                        recoveryToken: null
+                        createdAt: "2023-09-23T03:32:16.170Z"
+
+  # Users paths
+
+  /users:
+    get:
+      summary: Get a list of users
+      tags:
+        - Users
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+                example:
+                  - id: 10
+                    email: harry@example.com
+                    password: $2b$10$U4dauOa8o.Hjoq.8ls9NMebHdE.3No4y7LmmmHO9N6d17LtmwD5Uq
+                    role: customer
+                    recoveryToken: null
+                    createdAt: "2023-09-24T19:43:12.159Z"
+                    customer:
+                      id: 3
+                      name: harry
+                      lastName: olimpus
+                      phone: "15154595792"
+                      createdAt: "2023-09-24T19:43:12.159Z"
+                      userId: 10
+                  - id: 5
+                    email: emanu1@example.com
+                    password: $2b$10$mMfF1HGJX/uBu3JAUw.iHuVlasq4OJll8LR.0UFTaE4eRICa8/Tsi
+                    role: admin
+                    recoveryToken: null
+                    createdAt: "2023-09-23T03:32:16.170Z"
+                    customer:
+                      id: 1
+                      name: emanu
+                      lastName: mendez
+                      phone: "123123154"
+                      createdAt: "2023-09-23T03:32:16.170Z"
+                      userId: 5
+    post:
+      summary: Create a new user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: string
+                email: string
+                password: string
+                role: string
+
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  createdAt: 2023-10-22T02:01:42.921Z
+                  id: 16
+                  email: alabama@mail.com
+                  role: seller
+                  recoveryToken: null
+
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 16
+                  email: alabama@mail.com
+                  password: $2b$10$06An3e3V7rnA3BiqjusRw.q1sojgjfzVA1A9Pc0B9NgjO5.hU1Meu
+                  role: seller
+                  recoveryToken: null
+                  createdAt: "2023-10-22T02:01:42.921Z"
+                  customer:
+                    id: 8
+                    name: Permitito
+                    lastName: Gonzalis
+                    phone: "13213241515"
+                    createdAt: "2023-09-23T03:32:16.170Z"
+                    userId: 16
+
+    patch:
+      summary: Update a user by ID
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                id: 16
+                email: alabama@mail.com
+                password: $2b$10$06An3e3V7rnA3BiqjusRw.q1sojgjfzVA1A9Pc0B9NgjO5.hU1Meu
+                role: entrepreneur
+                recoveryToken: null
+                createdAt: "2023-10-22T02:01:42.921Z"
+                customer:
+                  id: 8
+                  name: Permitito
+                  lastName: Gonzalis
+                  phone: "13213241515"
+                  createdAt: "2023-09-23T03:32:16.170Z"
+                  userId: 16
+
+      responses:
+        "200":
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    delete:
+      summary: Delete a user by ID
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 16
+
+tags:
+  - name: Products
+    description: Operations related to products
+  - name: Users
+    description: Operations related to users
+  - name: Profile
+    description: Operation related to a determinated user authenticated
+  - name: Orders
+    description: Operations related to orders
+  - name: Categories
+    description: Operations related to categories
+  - name: Customers
+    description: Operations related to customers
+  - name: Auth
+    description: Operations related to authentications
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: The unique identifier for the product.
+          readOnly: true
+        name:
+          type: string
+          description: The name of the product.
+        description:
+          type: string
+          description: The description of the product.
+        price:
+          type: number
+          format: float
+          description: The price of the product.
+        image:
+          type: string
+          description: The URL to the product's image.
+        categoryId:
+          type: integer
+          description: The unique identifier of the associated category.
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time when the product was created.
+
+      required:
+        - name
+        - description
+        - price
+        - image
+        - categoryId
+      example:
+        id: 4
+        name: A greater watermelon
+        description: "A great watermelon, like the song..."
+        price: 20
+        image: https://image.com/example
+        categoryId: 4
+        createdAt: "2023-10-22T00:53:47.876Z"
+        category:
+          id: 4
+          name: Food
+          image: https://placeimg.com/640/480
+          createdAt: "2023-09-25T02:49:38.116Z"
+
+    User:
+      type: object
+      description: When the user is generated via POST in /customers, you don't need to put an userId field, instead, in the field of user, you put an object following the User creation rules.
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: The unique identifier for the user.
+          readOnly: true
+        email:
+          type: string
+          description: The email address of the user.
+        password:
+          type: string
+          description: The user's password.
+        role:
+          type: string
+          description: The role of the user.
+        recoveryToken:
+          type: string
+          description: The recovery token for the user.
+          default: null
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time when the user was created.
+
+        customer:
+          $ref: "#/components/schemas/Customer" # Referencia al esquema de Customer
+
+      required:
+        - email
+        - password
+        - role
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: The unique identifier for the category.
+          readOnly: true
+        name:
+          type: string
+          description: The name of the category.
+        image:
+          type: string
+          description: The URL to the category's image.
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time when the category was created.
+      required:
+        - name
+        - image
+
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: The unique identifier for the customer.
+          readOnly: true
+        name:
+          type: string
+          description: The first name of the customer.
+        lastName:
+          type: string
+          description: The last name of the customer.
+        phone:
+          type: string
+          description: The phone number of the customer.
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time when the customer was created.
+        userId:
+          type: integer
+          description: The unique identifier of the associated user.
+          readOnly: true
+        user:
+          $ref: "#/components/schemas/User" # Referencia al esquema de User
+        orders:
+          type: array
+          items:
+            $ref: "#/components/schemas/Order" # Referencia al esquema de Order
+      required:
+        - name
+        - lastName
+        - phone
+        - user
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: The unique identifier for the order.
+          readOnly: true
+        totalPrice:
+          type: number
+          format: float
+          description: The total price of the order (virtual property).
+          readOnly: true
+        customerId:
+          type: integer
+          description: The unique identifier of the customer who placed the order.
+          readOnly: true
+        date:
+          type: string
+          format: date-time
+          description: The date and time when the order was placed.
+
+        customer:
+          $ref: "#/components/schemas/Customer" # Referencia al esquema de Customer
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product" # Referencia al esquema de Product
+
+      required:
+        - customerId
+        - items
+
+    OrderProduct:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: The unique identifier for the order product.
+          readOnly: true
+        orderId:
+          type: integer
+          description: The unique identifier of the associated order.
+          readOnly: true
+        productId:
+          type: integer
+          description: The unique identifier of the associated product.
+          readOnly: true
+        amount:
+          type: integer
+          description: The quantity of the product in the order.
+        date:
+          type: string
+          format: date-time
+          description: The date and time when the order product was added to the order.
+
+      required:
+        - orderId
+        - productId
+        - amount
+
+  securitySchemes:
+    JWTToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

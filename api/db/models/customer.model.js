@@ -44,7 +44,7 @@ const customerSchema = {
       key: 'id', // Esta debe ser siempre la llave primaria del model.
     },
     onUpdate: 'CASCADE',
-    onDelete: 'SET NULL',
+    onDelete: 'CASCADE',
   },
 };
 
