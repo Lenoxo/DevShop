@@ -34,11 +34,13 @@ class ProductsService {
       where: {},
     };
 
-    if (limit && offset) {
+    if (limit) {
       options.limit = limit;
-      options.offset = offset;
     }
 
+    if (offset) {
+      options.offset = offset;
+    }
     // Filtrados con where en sequelize
     if (price) {
       options.where.price = price;
