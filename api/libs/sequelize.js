@@ -18,11 +18,6 @@ let options = {
 if (config.isProd) {
   URI = config.dbUrl;
   options.logging = false;
-  options.dialectOptions = {
-    ssl: {
-      rejectUnauthorized: false
-    }
-  }
 } else {
   const USER = encodeURIComponent(config.dbUser);
   const PASSWORD = encodeURIComponent(config.dbPassword);

@@ -22,7 +22,7 @@ The DevShop API offers the following key features:
 
 ### How to Use
 
-To interact with the DevShop API, please read it's self hosted documentation: [SwaggerDocs](https://backend-ecommerce-production-a555.up.railway.app/api-docs/).
+To interact with the DevShop API, please read it's self hosted documentation: [SwaggerDocs](https://devshop-api-1gc5.onrender.com/api-docs/).
 
 ### Run locally
 

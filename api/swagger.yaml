@@ -9,7 +9,7 @@ info:
 
         <details>
         <summary>Show the sample JWT</summary>
-            ``eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY5NzkxOTU0MH0.jZcLU3oMUGAKordYnhDdMo8eL-8Jh5XfeJtgseICSug``
+            ``eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcwMjU2NjY0NH0.j18fStaty5TFnL7RjKN8POjvnZhm29ahpHB0yGg93Gc``
         </details>
 
     Some useful links:
@@ -29,7 +29,7 @@ servers:
     variables:
       port:
         default: "3000"
-  - url: https://backend-ecommerce-production-a555.up.railway.app/api/v1
+  - url: https://devshop-api-1gc5.onrender.com/api/v1
     description: Production server url.
 
 paths:
