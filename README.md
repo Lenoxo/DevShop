@@ -35,7 +35,7 @@ To interact with the DevShop API, please read it's self hosted documentation: [S
 6. Run the development server: `npm run dev`
 7. Navigate to `http://localhost:3000/api-docs/` to view the SwaggerDocs.
 
-## Known Issues
+### Known Issues
 
 For now, because I'm using a free Render plan, the production server will spin down due to inactivity, and the first connection you'll make will take around 1 minute. The later connections should take half a second.
 
