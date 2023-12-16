@@ -1,5 +1,7 @@
 # DevShop API
 
+> ⚠ For now, because I'm using a free Render plan, the production server will spin down due to inactivity, and the first connection you'll make will take around 1 minute. The later connections should take half a second. ⚠
+
 The **DevShop API** is a project built using **Node.js, Express.js, Passport.js**, and **PostgreSQL**, designed to simulate the functionality of an e-commerce platform. This API provides a range of features and follows best practices, making it a robust foundation for testing and development purposes.
 
 ## Table of Contents:
@@ -7,7 +9,6 @@ The **DevShop API** is a project built using **Node.js, Express.js, Passport.js*
 - [Features](#features)
 - [How to Use](#how-to-use)
 - [Run locally](#run-locally)
-- [Known Issues](#known-issues)
 - [License](#license)
 - [Author](#author)
 
@@ -34,10 +35,6 @@ To interact with the DevShop API, please read it's self hosted documentation: [S
 5. Run the database migrations until you finish: `npm run migrations:run`
 6. Run the development server: `npm run dev`
 7. Navigate to `http://localhost:3000/api-docs/` to view the SwaggerDocs.
-
-### Known Issues
-
-For now, because I'm using a free Render plan, the production server will spin down due to inactivity, and the first connection you'll make will take around 1 minute. The later connections should take half a second.
 
 ### License
 
