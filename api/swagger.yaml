@@ -2,35 +2,45 @@ openapi: 3.0.0
 info:
   title: DevShop API - OpenAPI 3.0
   description: |-
-    This is a test API that simulates an ecommerce API interaction, made for learning how to use Node.js and it's technologies ecosystem for the Backend. hope it helps.
+    This is a REST-full API that simulates an ecommerce API interaction, made for learning how to use Node.js and it's technologies ecosystem for the Backend. hope it helps.
 
-    For completing request to protected endpoints, you need to authenticate, click the Authorize green button and give it this values:
-      - **JWTToken  (http, Bearer)**: Use a new token logging in ``/auth/login`` or use this token for the meantime:
+    ## **First Steps:**
 
-        <details>
-        <summary>Show the sample JWT</summary>
-            ``eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcwMjU2NjY0NH0.j18fStaty5TFnL7RjKN8POjvnZhm29ahpHB0yGg93Gc``
-        </details>
+    1. Change the selected server below this section to local if you're working in changes to the API locally, otherwise leave the default one.
 
-    Some useful links:
-    - [The DevShop repository](https://github.com/Lenoxo/DevShop)
-    - [The source API definition for the DevShop](pending...)
+    2. You can make requests without authentication if the section / endpoint doesn't have the lock icon in the left corner.
+
+    3. For completing requests to protected endpoints (the ones with the lock icon in the left corner for guidance), you need to authenticate:
+
+      - Click the Authorize green button below this section and for **JWTToken  (http, Bearer)** give it one of these two values:
+
+        1. Use a new token logging in ``/auth/login`` with an existing user that you know the password.
+
+        2. Use this sample token if you don't want to test the authentication part:
+          <details>
+          <summary>Show the sample JWT (Only for production server)</summary>
+          ``eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcwMjU2NjY0NH0.j18fStaty5TFnL7RjKN8POjvnZhm29ahpHB0yGg93Gc``
+          </details>
+
+    ## Some useful links:
+    - [DevShop API repository in GitHub](https://github.com/Lenoxo/DevShop)
+    - [My other projects](https://emanueldev.vercel.app/projects)
   contact:
-    name: Emanuel Padilla (Lenoxo)
+    name: Contact Me
     url: https://emanueldev.vercel.app/
   license:
-    name: MIT
+    name: This project is under MIT license
     url: https://opensource.org/license/mit/
   version: 1.0.0
 
 servers:
+  - url: https://devshop-api-1gc5.onrender.com/api/v1
+    description: Production server url.
   - url: http://localhost:{port}/api/v1
     description: Local server direction.
     variables:
       port:
         default: "3000"
-  - url: https://devshop-api-1gc5.onrender.com/api/v1
-    description: Production server url.
 
 paths:
   # auth paths
