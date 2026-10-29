@@ -22,7 +22,7 @@
   "author": "Lenoxo (Emanuel Padilla)",
   "license": "MIT",
   "devDependencies": {
-    "@railway/cli": "^3.4.0",
+    "@railway/cli": "^5.71.0",
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
@@ -30,7 +30,7 @@
     "prettier": "^3.0.2"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.0.2",
+    "@faker-js/faker": "^10.6.0",
     "@hapi/boom": "^10.0.1",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
@@ -39,14 +39,14 @@
     "joi": "^17.10.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.6.1",
-    "nodemailer": "^6.9.5",
+    "nodemailer": "^10.3.1",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "pg": "^8.11.3",
-    "sequelize": "^6.33.0",
+    "sequelize": "^6.37.8",
     "sequelize-cli": "^6.6.1",
-    "sqlite3": "^5.1.6",
+    "sqlite3": "^6.0.1",
     "swagger-ui-express": "^4.1.5",
     "yaml": "^2.3.3"
   }
