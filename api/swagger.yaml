@@ -142,8 +142,6 @@ paths:
     get:
       summary: Get all categories
       operationId: getCategories
-      parameters:
-
       tags:
         - Categories
       responses:
