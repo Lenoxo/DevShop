@@ -252,7 +252,8 @@ paths:
               properties:
                 $ref: #/components/schemas/Category
               example:
-                name: Movies
+                name: As above so below
+                categoryId: 3
       responses:
         "200":
           description: Category updated successfully
