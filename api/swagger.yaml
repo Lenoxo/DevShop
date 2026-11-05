@@ -253,7 +253,6 @@ paths:
                 $ref: #/components/schemas/Category
               example:
                 name: As above so below
-                categoryId: 3
       responses:
         "200":
           description: Category updated successfully
@@ -753,6 +752,7 @@ paths:
               type: object
               example:
                 name: A greater watermelon
+                categoryId: 3
       responses:
         "200":
           description: Product updated successfully
