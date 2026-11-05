@@ -36,6 +36,6 @@ module.exports = {
 
   async down (queryInterface) {
 
-    await queryInterface.bulkDelete(CATEGORY_TABLE, null)
+    await queryInterface.bulkDelete(CATEGORY_TABLE, null, {})
   }
 };
